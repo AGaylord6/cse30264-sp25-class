@@ -288,6 +288,36 @@ bool Tracker::processRegister (Message * pMessageRegister)
      *  IP address, port number, and number of files
     */
 
+    if(isVerbose())
+    {
+        printf("Displaying the content of the Register Message\n");
+        printf("  Actual Length was %d bytes\n", pMessageRegister->getLength());
+        printf("  Type: %d\n", pMessageRegister->getData()[0]);
+
+        uint16_t    nMsgLength;
+
+        memcpy(&nMsgLength, pMessageRegister->getData()+1, 2);
+        nMsgLength = ntohs(nMsgLength);
+        printf("  Stated Length: %d\n", nMsgLength);
+
+        // Requested identifier
+        printf("  ID: %d\n", pMessageRegister->getData()[3]);
+
+        // IP address
+        printf("  IP: %d.%d.%d.%d\n", pMessageRegister->getData()[4], pMessageRegister->getData()[5], pMessageRegister->getData()[6], pMessageRegister->getData()[7]);
+
+        uint16_t    nPort;
+        memcpy(&nPort, pMessageRegister->getData()+8, 2);
+        nPort = ntohs(nPort);
+        printf("  Port: %d\n", nPort);
+
+        uint16_t    nFiles;
+        memcpy(&nFiles, pMessageRegister->getData()+10, 2);
+        nFiles = ntohs(nFiles);
+        printf("  Files: %d\n", nFiles);
+    }
+
+
     /* The response message now adds a status field after the length. The length does
        include the status field.
        Overall Format is as follows:
